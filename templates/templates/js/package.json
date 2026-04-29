@@ -1,0 +1,17 @@
+{
+  "name": "{{name}}",
+  "version": "0.1.0",
+  "description": "{{description}}",
+  "main": "dist/index.js",
+  "author": "{{author}}",
+  "license": "MIT",
+  "scripts": {
+    "dev": "node src/index.js",
+    "build": "echo 'No build step for JavaScript'",
+    "test": "node --test tests/"
+  },
+  "keywords": [],
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

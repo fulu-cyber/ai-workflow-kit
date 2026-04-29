@@ -1,0 +1,25 @@
+{
+  "name": "{{name}}",
+  "version": "0.1.0",
+  "description": "{{description}}",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": "{{author}}",
+  "license": "MIT",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc",
+    "test": "vitest",
+    "test:run": "vitest run"
+  },
+  "keywords": [],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.1"
+  }
+}
