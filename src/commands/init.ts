@@ -114,8 +114,8 @@ export async function init(options: { yes?: boolean }): Promise<void> {
   }
 
   const templateType = config.typescript ? 'ts' : 'js';
-  const commonTemplatesPath = getTemplatePath('templates/common');
-  const typeTemplatesPath = getTemplatePath(`templates/${templateType}`);
+  const commonTemplatesPath = getTemplatePath('common');
+  const typeTemplatesPath = getTemplatePath(templateType);
 
   try {
     copyDir(commonTemplatesPath, process.cwd(), config);
