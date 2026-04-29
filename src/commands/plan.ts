@@ -61,7 +61,9 @@ function parseDesignDoc(designDocPath: string): DesignDoc {
     let endIndex = next ? content.indexOf(`## ${next.title}`) : content.length;
     if (endIndex === -1) endIndex = content.length;
 
-    const sectionContent = content.slice(startIndex + `## ${current.title}`.length, endIndex).trim();
+    const sectionContent = content
+      .slice(startIndex + `## ${current.title}`.length, endIndex)
+      .trim();
     (result as any)[current.key] = sectionContent;
   }
 
@@ -71,8 +73,8 @@ function parseDesignDoc(designDocPath: string): DesignDoc {
 function splitFeatures(coreFeatures: string): string[] {
   const features = coreFeatures
     .split(/\n|-|\d\./)
-    .map(f => f.trim())
-    .filter(f => f.length > 0);
+    .map((f) => f.trim())
+    .filter((f) => f.length > 0);
   return features;
 }
 
@@ -102,10 +104,7 @@ function generateDefaultTasks(features: string[]): Task[] {
       title: `测试功能: ${feature.substring(0, 45)}${feature.length > 45 ? '...' : ''}`,
       description: `为 "${feature}" 功能编写和运行测试`,
       estimatedHours: 1,
-      acceptanceCriteria: [
-        '测试用例覆盖主要场景',
-        '所有测试通过',
-      ],
+      acceptanceCriteria: ['测试用例覆盖主要场景', '所有测试通过'],
       dependencies: [taskId - 2],
     });
   }
@@ -119,7 +118,7 @@ function renderTaskList(tasks: Task[]): string {
     result += `### 任务 ${task.id}: ${task.title}\n\n`;
     result += `- **描述**: ${task.description}\n`;
     result += `- **预计时间**: ${task.estimatedHours} 小时\n`;
-    result += `- **依赖**: ${task.dependencies.length > 0 ? task.dependencies.map(id => `#${id}`).join(', ') : '无'}\n\n`;
+    result += `- **依赖**: ${task.dependencies.length > 0 ? task.dependencies.map((id) => `#${id}`).join(', ') : '无'}\n\n`;
     result += '**验收标准**:\n';
     for (const criteria of task.acceptanceCriteria) {
       result += `- [ ] ${criteria}\n`;
@@ -208,10 +207,13 @@ async function reviewTasks(tasks: Task[]): Promise<Task[]> {
         type: 'select',
         name: 'taskId',
         message: '选择要修改的任务:',
-        choices: currentTasks.map(task => ({ title: `#${task.id}: ${task.title}`, value: task.id })),
+        choices: currentTasks.map((task) => ({
+          title: `#${task.id}: ${task.title}`,
+          value: task.id,
+        })),
       });
 
-      const task = currentTasks.find(t => t.id === taskToEdit.taskId);
+      const task = currentTasks.find((t) => t.id === taskToEdit.taskId);
       if (task) {
         const questions: any[] = [
           {
@@ -245,10 +247,13 @@ async function reviewTasks(tasks: Task[]): Promise<Task[]> {
         type: 'select',
         name: 'taskId',
         message: '选择要删除的任务:',
-        choices: currentTasks.map(task => ({ title: `#${task.id}: ${task.title}`, value: task.id })),
+        choices: currentTasks.map((task) => ({
+          title: `#${task.id}: ${task.title}`,
+          value: task.id,
+        })),
       });
 
-      currentTasks = currentTasks.filter(t => t.id !== taskToDelete.taskId);
+      currentTasks = currentTasks.filter((t) => t.id !== taskToDelete.taskId);
     }
   }
 
@@ -297,12 +302,6 @@ export async function plan(): Promise<void> {
   }
 }
 
-export {
-  parseDesignDoc,
-  splitFeatures,
-  generateDefaultTasks,
-  renderTaskList,
-  renderTasksTemplate,
-};
+export { parseDesignDoc, splitFeatures, generateDefaultTasks, renderTaskList, renderTasksTemplate };
 
 export default plan;

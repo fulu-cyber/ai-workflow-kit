@@ -22,7 +22,7 @@ export function getGitStatus(): GitStatus | null {
       return null;
     }
 
-    const lines = statusResult.stdout.split('\n').filter(line => line.trim() !== '');
+    const lines = statusResult.stdout.split('\n').filter((line) => line.trim() !== '');
     let branch = 'main';
     const staged: string[] = [];
     const unstaged: string[] = [];
@@ -158,7 +158,8 @@ export async function ship(): Promise<void> {
     console.log(chalk.green('  ✅ 分支创建成功'));
   }
 
-  const totalFiles = gitStatus.staged.length + gitStatus.unstaged.length + gitStatus.untracked.length;
+  const totalFiles =
+    gitStatus.staged.length + gitStatus.unstaged.length + gitStatus.untracked.length;
   if (totalFiles > 0 && gitStatus.staged.length === 0) {
     const shouldStage = await prompts({
       type: 'confirm',

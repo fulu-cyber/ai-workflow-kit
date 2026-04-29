@@ -22,10 +22,7 @@ const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
 
 const cli = cac('aiw');
 
-cli
-  .version(pkg.version)
-  .help()
-  .usage('<command> [options]');
+cli.version(pkg.version).help().usage('<command> [options]');
 
 cli.command('', 'Show welcome message').action(() => {
   console.log(chalk.cyan.bold('\n  AI Workflow Kit'));
@@ -47,41 +44,29 @@ cli
     await brainstorm();
   });
 
-cli
-  .command('plan', 'Task planning based on design document')
-  .action(async () => {
-    await plan();
-  });
+cli.command('plan', 'Task planning based on design document').action(async () => {
+  await plan();
+});
 
-cli
-  .command('tdd', 'TDD workflow - red, green, refactor')
-  .action(async () => {
-    await tdd();
-  });
+cli.command('tdd', 'TDD workflow - red, green, refactor').action(async () => {
+  await tdd();
+});
 
-cli
-  .command('review', 'Code review with ESLint and Prettier')
-  .action(async () => {
-    await review();
-  });
+cli.command('review', 'Code review with ESLint and Prettier').action(async () => {
+  await review();
+});
 
-cli
-  .command('ship', 'Git automation - branch, commit, push')
-  .action(async () => {
-    await ship();
-  });
+cli.command('ship', 'Git automation - branch, commit, push').action(async () => {
+  await ship();
+});
 
-cli
-  .command('docs', 'Generate documentation')
-  .action(async () => {
-    await docs();
-  });
+cli.command('docs', 'Generate documentation').action(async () => {
+  await docs();
+});
 
-cli
-  .command('github', 'GitHub integration setup')
-  .action(async () => {
-    await github();
-  });
+cli.command('github', 'GitHub integration setup').action(async () => {
+  await github();
+});
 
 cli.parse();
 

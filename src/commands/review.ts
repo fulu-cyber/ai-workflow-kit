@@ -18,7 +18,12 @@ export interface ReviewReport {
   timestamp: string;
 }
 
-export function runEslint(): { success: boolean; errors: number; warnings: number; output: string } {
+export function runEslint(): {
+  success: boolean;
+  errors: number;
+  warnings: number;
+  output: string;
+} {
   try {
     const result = spawnSync('npx', ['eslint', 'src', '--ext', '.ts,.tsx', '--format', 'json'], {
       encoding: 'utf-8',
@@ -157,9 +162,13 @@ export async function review(): Promise<void> {
   console.log('\n' + chalk.cyan.bold('  审查结果:'));
 
   if (eslintResult.success) {
-    console.log(chalk.green(`  ✅ ESLint 通过 (${eslintResult.errors} 错误, ${eslintResult.warnings} 警告)`));
+    console.log(
+      chalk.green(`  ✅ ESLint 通过 (${eslintResult.errors} 错误, ${eslintResult.warnings} 警告)`)
+    );
   } else {
-    console.log(chalk.red(`  ❌ ESLint 发现问题 (${eslintResult.errors} 错误, ${eslintResult.warnings} 警告)`));
+    console.log(
+      chalk.red(`  ❌ ESLint 发现问题 (${eslintResult.errors} 错误, ${eslintResult.warnings} 警告)`)
+    );
   }
 
   if (prettierResult.success) {
@@ -199,9 +208,15 @@ export async function review(): Promise<void> {
 
       console.log('\n' + chalk.cyan.bold('  修复后结果:'));
       if (finalEslint.success) {
-        console.log(chalk.green(`  ✅ ESLint 通过 (${finalEslint.errors} 错误, ${finalEslint.warnings} 警告)`));
+        console.log(
+          chalk.green(`  ✅ ESLint 通过 (${finalEslint.errors} 错误, ${finalEslint.warnings} 警告)`)
+        );
       } else {
-        console.log(chalk.red(`  ❌ ESLint 仍有问题 (${finalEslint.errors} 错误, ${finalEslint.warnings} 警告)`));
+        console.log(
+          chalk.red(
+            `  ❌ ESLint 仍有问题 (${finalEslint.errors} 错误, ${finalEslint.warnings} 警告)`
+          )
+        );
       }
       if (finalPrettier.success) {
         console.log(chalk.green('  ✅ Prettier 格式检查通过'));
