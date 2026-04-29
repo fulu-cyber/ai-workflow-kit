@@ -121,40 +121,6 @@ aiw docs
 aiw github
 ```
 
-## 上传到 GitHub
-
-### 1. 在 GitHub 上创建新仓库
-
-1. 访问 https://github.com/new
-2. 创建一个新的仓库（不要初始化 README、.gitignore 或 LICENSE）
-
-### 2. 初始化本地 Git 仓库（如果还没有）
-
-```bash
-# 如果项目还没有初始化 git
-git init
-git add .
-git commit -m "Initial commit"
-```
-
-### 3. 链接到远程仓库
-
-```bash
-# 替换为你的仓库地址
-git remote add origin https://github.com/<your-username>/<your-repo>.git
-
-# 推送到 GitHub
-git branch -M main
-git push -u origin main
-```
-
-### 4. 使用 aiw github 命令（更简单的方式）
-
-```bash
-# 让工具帮你配置 GitHub 集成
-aiw github
-```
-
 ## 项目结构
 
 ```
@@ -165,7 +131,6 @@ ai-workflow-kit/
 │   └── utils/            # 工具函数
 ├── templates/           # 项目模板
 ├── tests/               # 测试文件
-├── dist/                # 编译后的代码
 ├── package.json
 ├── tsconfig.json
 ├── .eslintrc.json
