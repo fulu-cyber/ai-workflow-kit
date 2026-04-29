@@ -19,7 +19,7 @@
 
 ```bash
 # 克隆项目
-git clone <repository-url>
+git clone https://github.com/fulu-cyber/ai-workflow-kit.git
 cd ai-workflow-kit
 
 # 安装依赖
