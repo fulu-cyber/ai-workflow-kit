@@ -40,7 +40,17 @@ coverage/
 
 # Bun
 bun.lockb
+bun.lock
 .bun/
+
+# Trae
+.trae/
+
+# Temporary project files
+AI开发工作流设计方案.md
+GITHUB_UPLOAD_GUIDE.md
+push-to-github.sh
+PROJECT_SUMMARY.md
 
 # TypeScript
 *.tsbuildinfo
