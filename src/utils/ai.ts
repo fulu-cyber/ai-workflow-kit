@@ -120,7 +120,7 @@ async function callAnthropic(
   return data.content?.[0]?.text || '';
 }
 
-function mockAIResponse(systemPrompt: string, userPrompt: string): string {
+export function mockAIResponse(systemPrompt: string, userPrompt: string): string {
   console.log(chalk.cyan('\n  🤖 AI 模拟模式 - 返回模拟响应\n'));
 
   if (systemPrompt.includes('需求分析') || systemPrompt.includes('设计文档')) {

@@ -77,7 +77,7 @@ async function generateCode(request: GenerationRequest): Promise<string> {
   }
 }
 
-function generateMockCode(request: GenerationRequest): string {
+export function generateMockCode(request: GenerationRequest): string {
   const fileName = request.fileName;
   const ext = fileName.split('.').pop() || 'ts';
   const funcName =
