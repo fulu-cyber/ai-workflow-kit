@@ -36,6 +36,7 @@
   "dependencies": {
     "cac": "^6.7.14",
     "chalk": "^4.1.2",
+    "dotenv": "^16.4.5",
     "prompts": "^2.4.2"
   },
   "devDependencies": {

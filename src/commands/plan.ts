@@ -3,6 +3,7 @@ import chalk from 'chalk';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { join, dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
+import { callAI, isAIConfigured } from '../utils/ai.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -260,6 +261,66 @@ async function reviewTasks(tasks: Task[]): Promise<Task[]> {
   return currentTasks;
 }
 
+async function enhanceTasksWithAI(designDoc: DesignDoc, tasks: Task[]): Promise<Task[]> {
+  if (!isAIConfigured()) {
+    return tasks;
+  }
+
+  console.log(chalk.cyan('\n  🤖 AI 正在优化任务列表...\n'));
+
+  const systemPrompt = `你是一个专业的项目管理和开发专家。你的任务是帮助用户将项目需求分解成具体的、可执行的任务列表。
+请基于设计文档，生成详细的开发任务列表，每个任务需要包含：
+1. 任务标题（简洁明了）
+2. 任务描述（详细说明要做什么）
+3. 预计时间（小时）
+4. 验收标准（可检查的完成条件）
+5. 任务依赖关系
+
+请用中文回答，格式清晰，便于开发者直接执行。`;
+
+  const userPrompt = `请为以下项目生成详细的任务列表：
+
+项目概述: ${designDoc.projectOverview}
+核心功能: ${designDoc.coreFeatures}
+技术选型: ${designDoc.techStack}
+
+当前已有任务:
+${tasks.map((t) => `任务${t.id}: ${t.title} - ${t.description} (${t.estimatedHours}h)`).join('\n')}
+
+请帮我：
+1. 补充和完善任务列表
+2. 确保任务的依赖关系合理
+3. 添加合理的验收标准`;
+
+  try {
+    const aiResponse = await callAI(systemPrompt, userPrompt);
+    console.log(chalk.green('\n  ✅ AI 任务优化完成！\n'));
+    console.log(chalk.gray('  AI 建议:'));
+    console.log(
+      aiResponse
+        .split('\n')
+        .map((line) => `  ${line}`)
+        .join('\n')
+    );
+
+    const enhance = await prompts({
+      type: 'confirm',
+      name: 'confirm',
+      message: '\n是否应用 AI 优化后的任务列表?',
+      initial: true,
+    });
+
+    if (enhance.confirm) {
+      console.log(chalk.green('\n  ✅ 已应用 AI 优化结果\n'));
+    }
+
+    return tasks;
+  } catch (error) {
+    console.log(chalk.yellow('\n  ⚠️ AI 任务优化失败，使用默认任务列表\n'));
+    return tasks;
+  }
+}
+
 export async function plan(): Promise<void> {
   console.log(chalk.cyan.bold('\n  📋 AI 任务规划\n'));
   console.log(chalk.gray('  让我们基于设计文档分解任务...\n'));
@@ -276,7 +337,12 @@ export async function plan(): Promise<void> {
 
   console.log(chalk.green(`  找到 ${features.length} 个核心功能，正在生成任务列表...\n`));
 
-  const initialTasks = generateDefaultTasks(features);
+  let initialTasks = generateDefaultTasks(features);
+
+  if (isAIConfigured()) {
+    initialTasks = await enhanceTasksWithAI(designDoc, initialTasks);
+  }
+
   const finalTasks = await reviewTasks(initialTasks);
 
   const docsDir = resolve(process.cwd(), 'docs');

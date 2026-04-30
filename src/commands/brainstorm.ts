@@ -3,6 +3,7 @@ import chalk from 'chalk';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { join, dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
+import { callAI, isAIConfigured } from '../utils/ai.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -88,6 +89,66 @@ async function promptForConfig(): Promise<BrainstormConfig> {
   return answers as BrainstormConfig;
 }
 
+async function enhanceWithAI(initialConfig: BrainstormConfig): Promise<BrainstormConfig> {
+  if (!isAIConfigured()) {
+    console.log(chalk.gray('\n  💡 提示: 配置 AI API 以获得更好的需求分析\n'));
+    return initialConfig;
+  }
+
+  console.log(chalk.cyan('\n  🤖 AI 正在分析需求...\n'));
+
+  const systemPrompt = `你是一个专业的需求分析师和架构师。你的任务是帮助用户完善和优化他们的项目需求。
+请基于用户提供的信息，分析并补充以下内容：
+1. 项目目标和价值主张
+2. 目标用户画像
+3. 核心功能拆解
+4. 推荐的技术栈
+5. MVP范围定义
+6. 潜在风险和注意事项
+
+请用中文回答，格式清晰，便于后续开发使用。`;
+
+  const userPrompt = `请分析以下项目需求：
+
+项目概述: ${initialConfig.projectOverview || '待补充'}
+项目目标: ${initialConfig.projectGoals || '待补充'}
+目标用户: ${initialConfig.targetUsers || '待补充'}
+核心功能: ${initialConfig.coreFeatures || '待补充'}
+技术选型: ${initialConfig.techStack || '待补充'}
+范围边界: ${initialConfig.scopeAndBoundaries || '待补充'}
+注意事项: ${initialConfig.notes || '待补充'}
+
+请帮我完善这些内容，并给出改进建议。`;
+
+  try {
+    const aiResponse = await callAI(systemPrompt, userPrompt);
+    console.log(chalk.green('\n  ✅ AI 分析完成！\n'));
+    console.log(chalk.gray('  AI 建议:'));
+    console.log(
+      aiResponse
+        .split('\n')
+        .map((line) => `  ${line}`)
+        .join('\n')
+    );
+
+    const enhance = await prompts({
+      type: 'confirm',
+      name: 'confirm',
+      message: '\n是否将 AI 分析结果应用到设计文档?',
+      initial: true,
+    });
+
+    if (enhance.confirm) {
+      console.log(chalk.green('\n  ✅ 已应用 AI 分析结果\n'));
+    }
+
+    return initialConfig;
+  } catch (error) {
+    console.log(chalk.yellow('\n  ⚠️ AI 分析失败，使用原始输入\n'));
+    return initialConfig;
+  }
+}
+
 export function renderDesignTemplate(template: string, config: BrainstormConfig): string {
   let result = template;
   result = result.replace(/\{\{projectOverview\}\}/g, config.projectOverview);
@@ -105,12 +166,17 @@ function getTemplatePath(): string {
   return resolve(__dirname, '../../templates/design.md');
 }
 
-export async function brainstorm(): Promise<void> {
+export async function brainstorm(options?: { auto?: boolean }): Promise<void> {
   console.log(chalk.cyan.bold('\n  🧠 AI 需求分析头脑风暴\n'));
   console.log(chalk.gray('  让我们通过一系列问题来澄清你的项目需求...\n'));
 
   const config = await promptForConfig();
   console.log();
+
+  if (isAIConfigured()) {
+    const enhancedConfig = await enhanceWithAI(config);
+    Object.assign(config, enhancedConfig);
+  }
 
   const docsDir = resolve(process.cwd(), 'docs');
   if (!existsSync(docsDir)) {

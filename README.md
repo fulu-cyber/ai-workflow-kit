@@ -32,6 +32,20 @@ npm run build
 npm link
 ```
 
+### 配置 AI（可选）
+
+项目支持 OpenAI 和 Anthropic AI。创建 `.env` 文件：
+
+```bash
+# 复制示例配置
+cp .env.example .env
+
+# 编辑 .env 文件，填入你的 API Key
+AI_PROVIDER=openai  # 或 anthropic
+AI_API_KEY=your-api-key-here
+AI_MODEL=gpt-4      # 或 claude-3-sonnet-20240229
+```
+
 ### 使用方法
 
 #### 1. 创建新项目
@@ -93,32 +107,52 @@ aiw docs
 aiw github
 ```
 
+#### 9. AI 代码生成（需要配置 AI）
+
+```bash
+# 描述你想要的功能，AI 自动生成代码
+aiw generate
+```
+
+#### 10. 社交平台发布（需要配置社交平台 API）
+
+```bash
+# 发布到 Twitter、微博等平台
+aiw publish
+```
+
 ## 完整工作流示例
 
 ```bash
 # 1. 初始化项目
 aiw init
 
-# 2. 需求分析
+# 2. 需求分析（AI 增强）
 aiw brainstorm
 
-# 3. 任务规划
+# 3. 任务规划（AI 优化）
 aiw plan
 
-# 4. TDD 开发
+# 4. AI 代码生成
+aiw generate
+
+# 5. TDD 开发
 aiw tdd
 
-# 5. 代码审查
+# 6. 代码审查
 aiw review
 
-# 6. Git 自动化
+# 7. Git 自动化
 aiw ship
 
-# 7. 生成文档
+# 8. 生成文档
 aiw docs
 
-# 8. GitHub 配置
+# 9. GitHub 配置
 aiw github
+
+# 10. 发布到社交平台
+aiw publish
 ```
 
 ## 项目结构

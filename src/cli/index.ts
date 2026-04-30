@@ -13,6 +13,8 @@ import { review } from '../commands/review.js';
 import { ship } from '../commands/ship.js';
 import { docs } from '../commands/docs.js';
 import { github } from '../commands/github.js';
+import { generate } from '../commands/generate.js';
+import { publish } from '../commands/publish.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -67,6 +69,22 @@ cli.command('docs', 'Generate documentation').action(async () => {
 cli.command('github', 'GitHub integration setup').action(async () => {
   await github();
 });
+
+cli
+  .command('generate', 'AI-powered code generation')
+  .option('-f, --file <path>', 'Output file path')
+  .option('-d, --description <text>', 'Feature description')
+  .action(async (options: { file?: string; description?: string }) => {
+    await generate();
+  });
+
+cli
+  .command('publish', 'Publish product to social platforms')
+  .option('-p, --platforms <list>', 'Comma-separated list of platforms')
+  .option('-m, --message <text>', 'Publish message')
+  .action(async (options: { platforms?: string; message?: string }) => {
+    await publish();
+  });
 
 cli.parse();
 
